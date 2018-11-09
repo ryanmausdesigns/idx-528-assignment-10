@@ -10,12 +10,25 @@ const searchInput = (event) => {
     let userInput = element.value;  
 
     let URL = 'http://api.openweathermap.org/data/2.5/weather?q=+${userInput} + "&appid=" + apiKey;
-    
-    fetch(URL)
-    .then(  (response) => {return response.json(); } )
-    .then(getWeatherNow)
-    .then(getWeatherFiveDay)
-    .then(getWeatherIcon)
-}; 
 
+    const URL = "https://api.openweathermap.org/data/2.5/forecast/daily?" +
+"q= + ${userInput} &cnt=7&units=imperial&APPID= apiKey";
+    
+function getWeatherData() {
+    let headers = new Headers();
+  
+    return fetch(URL, {
+      method: 'GET',
+      headers: headers
+    }).then(data => {
+      return data.json();
+    });
+  }
+
+  getWeatherData().then(weatherData => {
+    let city = weatherData.city.name;
+    let dailyForecast = weatherData.list;
+  
+    renderData(city, dailyForecast);
+  });
 citySearch.addEventListener("change", searchInput);
